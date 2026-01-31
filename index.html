@@ -1,80 +1,24 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>웨딩정보맵</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- 카카오맵 SDK (본인 키로 교체) -->
-  <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY"></script>
+  <meta charset="UTF-8">
+  <title>카카오맵 테스트</title>
+
+  <!-- 카카오맵 SDK -->
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=3045c098e18692d4e2c6b81ebc2e5fbf"></script>
 </head>
+<body>
 
-<body class="bg-gray-100">
-
-  <!-- 헤더 -->
-  <header class="bg-white shadow p-4 text-center font-bold text-lg">
-    웨딩정보맵
-  </header>
-
-  <!-- 카테고리 필터 -->
-  <div class="flex justify-around bg-white p-2 text-sm">
-    <button onclick="filterCategory('전체')">전체</button>
-    <button onclick="filterCategory('스튜디오')">스튜디오</button>
-    <button onclick="filterCategory('드레스')">드레스</button>
-    <button onclick="filterCategory('메이크업')">메이크업</button>
-  </div>
-
-  <!-- 지도 -->
-  <div id="map" class="w-full h-[70vh]"></div>
-
-  <!-- 데이터 -->
-  <script src="data.js"></script>
+  <div id="map" style="width:100%; height:400px;"></div>
 
   <script>
-    const container = document.getElementById("map");
-    const options = {
-      center: new kakao.maps.LatLng(37.4979, 127.0276),
-      level: 5
+    var container = document.getElementById('map');
+    var options = {
+      center: new kakao.maps.LatLng(37.5665, 126.9780),
+      level: 3
     };
-    const map = new kakao.maps.Map(container, options);
 
-    let markers = [];
-
-    function renderMarkers(category) {
-      markers.forEach(m => m.setMap(null));
-      markers = [];
-
-      weddingData
-        .filter(item => category === "전체" || item.category === category)
-        .forEach(item => {
-          const marker = new kakao.maps.Marker({
-            map,
-            position: new kakao.maps.LatLng(item.lat, item.lng)
-          });
-
-          const info = new kakao.maps.InfoWindow({
-            content: `
-              <div style="padding:6px;font-size:12px">
-                <strong>${item.name}</strong><br/>
-                ${item.category}<br/>
-                💰 ${item.price}
-              </div>
-            `
-          });
-
-          kakao.maps.event.addListener(marker, 'click', () => {
-            info.open(map, marker);
-          });
-
-          markers.push(marker);
-        });
-    }
-
-    function filterCategory(category) {
-      renderMarkers(category);
-    }
-
-    renderMarkers("전체");
+    var map = new kakao.maps.Map(container, options);
   </script>
 
 </body>
