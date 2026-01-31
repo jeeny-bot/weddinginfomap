@@ -1,14 +1,115 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+  <title>웨딩정보맵</title>
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Kakao Map -->
+  <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY"></script>
 </head>
-<body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+
+<body class="h-screen flex flex-col bg-gray-100">
+
+  <!-- 상단 -->
+  <header class="bg-white shadow p-3 flex justify-between items-center">
+    <h1 class="text-lg font-bold">웨딩정보맵</h1>
+    <button class="text-sm bg-pink-500 text-white px-3 py-1 rounded">
+      지역 선택
+    </button>
+  </header>
+
+  <!-- 지도 -->
+  <div id="map" class="flex-1"></div>
+
+  <!-- 하단 카테고리 -->
+  <nav class="bg-white border-t flex justify-around p-2 text-sm">
+    <button onclick="filterCategory('all')">전체</button>
+    <button onclick="filterCategory('studio')">스튜디오</button>
+    <button onclick="filterCategory('dress')">드레스</button>
+    <button onclick="filterCategory('makeup')">메이크업</button>
+  </nav>
+
+  <!-- 바텀 시트 -->
+  <div id="sheet"
+       class="fixed bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-lg p-4 hidden">
+    <h2 id="shopName" class="font-bold text-lg"></h2>
+    <p id="shopInfo" class="text-sm text-gray-600 mt-1"></p>
+
+    <div class="flex gap-3 mt-4">
+      <button class="flex-1 bg-pink-500 text-white py-2 rounded">
+        ❤️ 찜하기
+      </button>
+      <button class="flex-1 bg-gray-800 text-white py-2 rounded">
+        📞 문의
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // 지도 생성
+    const map = new kakao.maps.Map(
+      document.getElementById('map'),
+      {
+        center: new kakao.maps.LatLng(37.5665, 126.9780),
+        level: 6
+      }
+    );
+
+    // 샘플 데이터
+    const shops = [
+      {
+        name: "서울 웨딩 스튜디오",
+        category: "studio",
+        info: "가격대 200~300 / 강남",
+        lat: 37.498,
+        lng: 127.027
+      },
+      {
+        name: "로맨틱 드레스샵",
+        category: "dress",
+        info: "가격대 150~250 / 청담",
+        lat: 37.525,
+        lng: 127.052
+      }
+    ];
+
+    let markers = [];
+
+    function drawMarkers(category = 'all') {
+      markers.forEach(m => m.setMap(null));
+      markers = [];
+
+      shops.forEach(shop => {
+        if (category !== 'all' && shop.category !== category) return;
+
+        const marker = new kakao.maps.Marker({
+          map,
+          position: new kakao.maps.LatLng(shop.lat, shop.lng)
+        });
+
+        kakao.maps.event.addListener(marker, 'click', () => {
+          openSheet(shop);
+        });
+
+        markers.push(marker);
+      });
+    }
+
+    function openSheet(shop) {
+      document.getElementById('shopName').innerText = shop.name;
+      document.getElementById('shopInfo').innerText = shop.info;
+      document.getElementById('sheet').classList.remove('hidden');
+    }
+
+    function filterCategory(cat) {
+      drawMarkers(cat);
+    }
+
+    drawMarkers();
+  </script>
 </body>
 </html>
