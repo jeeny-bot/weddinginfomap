@@ -2,114 +2,80 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>웨딩정보맵</title>
-
-  <!-- Tailwind -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Kakao Map -->
+  <!-- 카카오맵 SDK (본인 키로 교체) -->
   <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY"></script>
 </head>
 
-<body class="h-screen flex flex-col bg-gray-100">
+<body class="bg-gray-100">
 
-  <!-- 상단 -->
-  <header class="bg-white shadow p-3 flex justify-between items-center">
-    <h1 class="text-lg font-bold">웨딩정보맵</h1>
-    <button class="text-sm bg-pink-500 text-white px-3 py-1 rounded">
-      지역 선택
-    </button>
+  <!-- 헤더 -->
+  <header class="bg-white shadow p-4 text-center font-bold text-lg">
+    웨딩정보맵
   </header>
 
-  <!-- 지도 -->
-  <div id="map" class="flex-1"></div>
-
-  <!-- 하단 카테고리 -->
-  <nav class="bg-white border-t flex justify-around p-2 text-sm">
-    <button onclick="filterCategory('all')">전체</button>
-    <button onclick="filterCategory('studio')">스튜디오</button>
-    <button onclick="filterCategory('dress')">드레스</button>
-    <button onclick="filterCategory('makeup')">메이크업</button>
-  </nav>
-
-  <!-- 바텀 시트 -->
-  <div id="sheet"
-       class="fixed bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-lg p-4 hidden">
-    <h2 id="shopName" class="font-bold text-lg"></h2>
-    <p id="shopInfo" class="text-sm text-gray-600 mt-1"></p>
-
-    <div class="flex gap-3 mt-4">
-      <button class="flex-1 bg-pink-500 text-white py-2 rounded">
-        ❤️ 찜하기
-      </button>
-      <button class="flex-1 bg-gray-800 text-white py-2 rounded">
-        📞 문의
-      </button>
-    </div>
+  <!-- 카테고리 필터 -->
+  <div class="flex justify-around bg-white p-2 text-sm">
+    <button onclick="filterCategory('전체')">전체</button>
+    <button onclick="filterCategory('스튜디오')">스튜디오</button>
+    <button onclick="filterCategory('드레스')">드레스</button>
+    <button onclick="filterCategory('메이크업')">메이크업</button>
   </div>
 
-  <script>
-    // 지도 생성
-    const map = new kakao.maps.Map(
-      document.getElementById('map'),
-      {
-        center: new kakao.maps.LatLng(37.5665, 126.9780),
-        level: 6
-      }
-    );
+  <!-- 지도 -->
+  <div id="map" class="w-full h-[70vh]"></div>
 
-    // 샘플 데이터
-    const shops = [
-      {
-        name: "서울 웨딩 스튜디오",
-        category: "studio",
-        info: "가격대 200~300 / 강남",
-        lat: 37.498,
-        lng: 127.027
-      },
-      {
-        name: "로맨틱 드레스샵",
-        category: "dress",
-        info: "가격대 150~250 / 청담",
-        lat: 37.525,
-        lng: 127.052
-      }
-    ];
+  <!-- 데이터 -->
+  <script src="data.js"></script>
+
+  <script>
+    const container = document.getElementById("map");
+    const options = {
+      center: new kakao.maps.LatLng(37.4979, 127.0276),
+      level: 5
+    };
+    const map = new kakao.maps.Map(container, options);
 
     let markers = [];
 
-    function drawMarkers(category = 'all') {
+    function renderMarkers(category) {
       markers.forEach(m => m.setMap(null));
       markers = [];
 
-      shops.forEach(shop => {
-        if (category !== 'all' && shop.category !== category) return;
+      weddingData
+        .filter(item => category === "전체" || item.category === category)
+        .forEach(item => {
+          const marker = new kakao.maps.Marker({
+            map,
+            position: new kakao.maps.LatLng(item.lat, item.lng)
+          });
 
-        const marker = new kakao.maps.Marker({
-          map,
-          position: new kakao.maps.LatLng(shop.lat, shop.lng)
+          const info = new kakao.maps.InfoWindow({
+            content: `
+              <div style="padding:6px;font-size:12px">
+                <strong>${item.name}</strong><br/>
+                ${item.category}<br/>
+                💰 ${item.price}
+              </div>
+            `
+          });
+
+          kakao.maps.event.addListener(marker, 'click', () => {
+            info.open(map, marker);
+          });
+
+          markers.push(marker);
         });
-
-        kakao.maps.event.addListener(marker, 'click', () => {
-          openSheet(shop);
-        });
-
-        markers.push(marker);
-      });
     }
 
-    function openSheet(shop) {
-      document.getElementById('shopName').innerText = shop.name;
-      document.getElementById('shopInfo').innerText = shop.info;
-      document.getElementById('sheet').classList.remove('hidden');
+    function filterCategory(category) {
+      renderMarkers(category);
     }
 
-    function filterCategory(cat) {
-      drawMarkers(cat);
-    }
-
-    drawMarkers();
+    renderMarkers("전체");
   </script>
+
 </body>
 </html>
