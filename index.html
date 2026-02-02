@@ -4,77 +4,180 @@
   <meta charset="UTF-8" />
   <title>웨딩정보맵</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- 카카오맵 SDK (본인 키로 교체) -->
-  <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY"></script>
+
+  <!-- 카카오맵 SDK -->
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ee4ca5b694129145f0819786d73d107a"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+      background: #fafafa;
+      color: #333;
+    }
+
+    h1 {
+      margin: 16px 0 10px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    /* ===== 필터 메뉴 ===== */
+    #filterBar {
+      margin: 10px auto 16px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    #filterBar button {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #e0e0e0;
+      background: #ffffff;
+      color: #444;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    #filterBar button:hover {
+      background: #f7e9ef;
+      border-color: #e6b8c8;
+      color: #b84b6a;
+      transform: translateY(-1px);
+    }
+
+    #filterBar button.active {
+      background: linear-gradient(135deg, #f3c1d3, #e8a6bc);
+      color: #fff;
+      border-color: #e8a6bc;
+      box-shadow: 0 4px 10px rgba(232,166,188,0.45);
+    }
+
+    /* ===== 지도 영역 ===== */
+    #mapWrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    #map {
+      width: 90%;
+      max-width: 1100px;
+      height: 520px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    }
+  </style>
 </head>
 
-<body class="bg-gray-100">
+<body>
 
-  <!-- 헤더 -->
-  <header class="bg-white shadow p-4 text-center font-bold text-lg">
-    웨딩정보맵
-  </header>
+  <h1>💍 웨딩정보맵</h1>
 
-  <!-- 카테고리 필터 -->
-  <div class="flex justify-around bg-white p-2 text-sm">
-    <button onclick="filterCategory('전체')">전체</button>
-    <button onclick="filterCategory('스튜디오')">스튜디오</button>
-    <button onclick="filterCategory('드레스')">드레스</button>
-    <button onclick="filterCategory('메이크업')">메이크업</button>
+  <!-- 메뉴 -->
+  <div id="filterBar">
+    <button class="active" onclick="filterMarkers('전체')">전체</button>
+    <button onclick="filterMarkers('웨딩홀')">웨딩홀</button>
+    <button onclick="filterMarkers('스튜디오')">스튜디오</button>
+    <button onclick="filterMarkers('드레스')">드레스</button>
+    <button onclick="filterMarkers('메이크업')">메이크업</button>
   </div>
 
   <!-- 지도 -->
-  <div id="map" class="w-full h-[70vh]"></div>
-
-  <!-- 데이터 -->
-  <script src="data.js"></script>
+  <div id="mapWrap">
+    <div id="map"></div>
+  </div>
 
   <script>
-    const container = document.getElementById("map");
-    const options = {
-      center: new kakao.maps.LatLng(37.4979, 127.0276),
+    /* 1️⃣ 지도 생성 */
+    const map = new kakao.maps.Map(document.getElementById('map'), {
+      center: new kakao.maps.LatLng(37.5665, 126.9780),
       level: 5
-    };
-    const map = new kakao.maps.Map(container, options);
+    });
 
-    let markers = [];
+    /* 2️⃣ 웨딩 장소 데이터 */
+    const weddingPlaces = [
+      {
+        name: "행복웨딩홀",
+        type: "웨딩홀",
+        lat: 37.5665,
+        lng: 126.9780,
+        desc: "서울 중심 대형 웨딩홀"
+      },
+      {
+        name: "라라 스튜디오",
+        type: "스튜디오",
+        lat: 37.5651,
+        lng: 126.9895,
+        desc: "감성 웨딩 촬영 전문"
+      },
+      {
+        name: "블랑 드레스",
+        type: "드레스",
+        lat: 37.5700,
+        lng: 126.9820,
+        desc: "수입 드레스 취급"
+      },
+      {
+        name: "로즈 메이크업",
+        type: "메이크업",
+        lat: 37.5688,
+        lng: 126.9835,
+        desc: "웨딩 전문 메이크업 샵"
+      }
+    ];
 
-    function renderMarkers(category) {
-      markers.forEach(m => m.setMap(null));
-      markers = [];
+    /* 3️⃣ 마커 생성 */
+    const markers = [];
 
-      weddingData
-        .filter(item => category === "전체" || item.category === category)
-        .forEach(item => {
-          const marker = new kakao.maps.Marker({
-            map,
-            position: new kakao.maps.LatLng(item.lat, item.lng)
-          });
+    weddingPlaces.forEach(place => {
+      const marker = new kakao.maps.Marker({
+        map: map,
+        position: new kakao.maps.LatLng(place.lat, place.lng)
+      });
 
-          const info = new kakao.maps.InfoWindow({
-            content: `
-              <div style="padding:6px;font-size:12px">
-                <strong>${item.name}</strong><br/>
-                ${item.category}<br/>
-                💰 ${item.price}
-              </div>
-            `
-          });
+      marker.category = place.type;
 
-          kakao.maps.event.addListener(marker, 'click', () => {
-            info.open(map, marker);
-          });
+      const infoWindow = new kakao.maps.InfoWindow({
+        content: `
+          <div style="padding:8px;font-size:13px;line-height:1.4;">
+            <b>${place.name}</b><br>
+            ${place.type}<br>
+            <small>${place.desc}</small>
+          </div>
+        `
+      });
 
-          markers.push(marker);
-        });
+      kakao.maps.event.addListener(marker, 'click', () => {
+        infoWindow.open(map, marker);
+      });
+
+      markers.push(marker);
+    });
+
+    /* 4️⃣ 필터 기능 + 버튼 active */
+    function filterMarkers(type) {
+      document.querySelectorAll('#filterBar button').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.innerText === type) {
+          btn.classList.add('active');
+        }
+      });
+
+      markers.forEach(marker => {
+        if (type === '전체' || marker.category === type) {
+          marker.setMap(map);
+        } else {
+          marker.setMap(null);
+        }
+      });
     }
-
-    function filterCategory(category) {
-      renderMarkers(category);
-    }
-
-    renderMarkers("전체");
   </script>
 
 </body>

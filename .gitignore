@@ -1,0 +1,8 @@
+# Logs
+*.log
+firebase-debug.log
+
+# IDE / System
+.vscode/
+.DS_Store
+.idx/
