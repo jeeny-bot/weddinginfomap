@@ -2,184 +2,52 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<!-- Google tag (gtag.js) -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BR6G525NDG"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-BR6G525NDG');
 </script>
-<title>웨딩정보맵</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>웨딩정보맵 - 공공데이터 연동</title>
 
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ee4ca5b694129145f0819786d73d107a&libraries=services"></script>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ee4ca5b694129145f0819786d73d107a&libraries=services&autoload=false"></script>
 
 <style>
-body {
-  margin: 0;
-  font-family: "Noto Sans KR", Arial, sans-serif;
-  background: #fafafa;
-}
+body { margin: 0; font-family: "Noto Sans KR", Arial, sans-serif; background: #fafafa; }
+h1 { text-align: center; margin: 18px 0 10px; font-size: 22px; }
 
-/* 타이틀 */
-h1 {
-  text-align: center;
-  margin: 18px 0 10px;
-  font-size: 22px;
-}
+/* 검색 및 필터 바 */
+#searchBar { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; }
+#searchBar input { width: 220px; padding: 9px 14px; border-radius: 20px; border: 1px solid #ddd; }
+#searchBar button { padding: 9px 16px; border-radius: 20px; border: none; background: #f0b6c9; color: #fff; cursor: pointer; }
 
-/* 검색 */
-#searchBar {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-#searchBar input {
-  width: 220px;
-  padding: 9px 14px;
-  border-radius: 20px;
-  border: 1px solid #ddd;
-}
-
-#searchBar button {
-  padding: 9px 16px;
-  border-radius: 20px;
-  border: none;
-  background: #f0b6c9;
-  color: #fff;
-  cursor: pointer;
-}
-
-/* 필터 */
-#filterBar {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-}
-
-#filterBar button {
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid #ddd;
-  background: #fff;
-  cursor: pointer;
-}
-
-#filterBar button.active {
-  background: #f0b6c9;
-  color: #fff;
-  border-color: #f0b6c9;
-}
+#filterBar { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+#filterBar button { padding: 8px 16px; border-radius: 20px; border: 1px solid #ddd; background: #fff; cursor: pointer; }
+#filterBar button.active { background: #f0b6c9; color: #fff; border-color: #f0b6c9; }
 
 /* 레이아웃 */
-#contentWrap {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  padding: 0 16px 30px;
-}
+#contentWrap { display: flex; justify-content: center; gap: 16px; padding: 0 16px 30px; }
+#map { width: 55%; height: 520px; border-radius: 18px; box-shadow: 0 6px 18px rgba(0,0,0,0.15); }
+#sideWrap { width: 45%; max-width: 420px; display: flex; flex-direction: column; gap: 12px; }
 
-#map {
-  width: 55%;
-  height: 520px;
-  border-radius: 18px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-}
-
-#sideWrap {
-  width: 45%;
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-/* 리스트 */
-#list {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  overflow-y: auto;
-  max-height: 300px;
-}
-
-.list-item {
-  display: flex;
-  gap: 12px;
-  padding: 14px;
-  cursor: pointer;
-  border-bottom: 1px solid #f1f1f1;
-}
-
-.list-item:hover {
-  background: #fff5f8;
-}
-
-/* 썸네일 */
-.list-thumb {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  color: #fff;
-}
-
+/* 리스트 및 상세 패널 */
+#list { background: #fff; border-radius: 18px; box-shadow: 0 6px 18px rgba(0,0,0,0.12); overflow-y: auto; max-height: 300px; }
+.list-item { display: flex; gap: 12px; padding: 14px; cursor: pointer; border-bottom: 1px solid #f1f1f1; }
+.list-item:hover { background: #fff5f8; }
+.list-thumb { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #fff; }
 .thumb-웨딩홀 { background: #f0b6c9; }
 .thumb-스튜디오 { background: #7ab8f5; }
 .thumb-드레스 { background: #c8a2e8; }
 .thumb-메이크업 { background: #f5b27a; }
+.list-meta { font-size: 12px; color: #777; }
 
-.list-meta {
-  font-size: 12px;
-  color: #777;
-}
-
-/* 상세 패널 */
-#detailPanel {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-  padding: 18px;
-  display: none;
-}
-
-#detailPanel h2 {
-  margin: 0 0 6px;
-}
-
-#detailPanel .tag {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  margin-bottom: 8px;
-}
-
+#detailPanel { background: #fff; border-radius: 18px; box-shadow: 0 6px 18px rgba(0,0,0,0.15); padding: 18px; display: none; }
+#detailPanel h2 { margin: 0 0 6px; }
+.tag { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; margin-bottom: 8px; }
 .tag-웨딩홀 { background:#ffe6ee; color:#c94a6a; }
-.tag-스튜디오 { background:#e7f2ff; color:#2d6cc0; }
-.tag-드레스 { background:#f2eaff; color:#6b3fa0; }
-.tag-메이크업 { background:#fff0e3; color:#c96a22; }
-
-#detailPanel button {
-  width: 100%;
-  margin-top: 14px;
-  padding: 12px;
-  border-radius: 14px;
-  border: none;
-  background: #f0b6c9;
-  color: #fff;
-  font-size: 15px;
-  cursor: pointer;
-}
+#detailPanel button { width: 100%; margin-top: 14px; padding: 12px; border-radius: 14px; border: none; background: #f0b6c9; color: #fff; font-size: 15px; cursor: pointer; }
 </style>
 </head>
 
@@ -202,7 +70,6 @@ h1 {
 
 <div id="contentWrap">
   <div id="map"></div>
-
   <div id="sideWrap">
     <div id="list"></div>
     <div id="detailPanel"></div>
@@ -210,92 +77,130 @@ h1 {
 </div>
 
 <script>
-const map = new kakao.maps.Map(document.getElementById('map'), {
-  center: new kakao.maps.LatLng(37.5665, 126.9780),
-  level: 6
+let map;
+let ps;
+let allWeddingData = []; // 공공데이터 저장용
+let markers = []; // 지도 마커 저장용
+
+// 카카오 SDK 로드 대기
+kakao.maps.load(function() {
+    const container = document.getElementById('map');
+    const options = {
+        center: new kakao.maps.LatLng(37.5665, 126.9780),
+        level: 8
+    };
+    map = new kakao.maps.Map(container, options);
+    ps = new kakao.maps.services.Places();
+
+    // 데이터 가져오기 시작
+    fetchPublicData();
 });
 
-const ps = new kakao.maps.services.Places();
+// 공공데이터 API 호출 함수
+async function fetchPublicData() {
+    const serviceKey = 'd030c12012702d15b0490241512870f35c111e91ccac18cddd3e23e0173e06d2'; 
+    const url = `https://api.data.go.kr/openapi/tn_pubr_public_wedding_and_ceremony_hall_api?serviceKey=${serviceKey}&type=json&numOfRows=100`;
 
-const weddingPlaces = [
-  { name:"행복웨딩홀", type:"웨딩홀", icon:"💒", lat:37.5665, lng:126.9780, desc:"서울 중심 대형 웨딩홀", rating:4.7 },
-  { name:"라라 스튜디오", type:"스튜디오", icon:"📸", lat:37.5651, lng:126.9895, desc:"감성 웨딩 촬영 전문", rating:4.6 },
-  { name:"블랑 드레스", type:"드레스", icon:"👗", lat:37.57, lng:126.982, desc:"수입 드레스 전문", rating:4.8 },
-  { name:"로즈 메이크업", type:"메이크업", icon:"💄", lat:37.5688, lng:126.9835, desc:"웨딩 메이크업 샵", rating:4.5 }
-];
+    try {
+        const response = await fetch(url);
+        const json = await response.json();
+        const items = json.response.body.items;
 
-const markers = {};
+        // 공공데이터를 앱 형식에 맞게 변환
+        allWeddingData = items.map(item => ({
+            name: item.insttNm,
+            type: "웨딩홀",
+            icon: "💒",
+            lat: parseFloat(item.latitude),
+            lng: parseFloat(item.longitude),
+            address: item.rdnmadr || item.lnmadr,
+            rating: (Math.random() * (5.0 - 4.2) + 4.2).toFixed(1) // 임시 별점
+        })).filter(item => !isNaN(item.lat));
 
-weddingPlaces.forEach(p => {
-  markers[p.name] = new kakao.maps.Marker({
-    map,
-    position: new kakao.maps.LatLng(p.lat, p.lng)
-  });
-  markers[p.name].category = p.type;
-});
+        renderList('전체');
+        displayMarkers('전체');
+    } catch (error) {
+        console.error("데이터 로드 에러:", error);
+    }
+}
 
+// 지도에 마커 표시
+function displayMarkers(type) {
+    markers.forEach(m => m.setMap(null));
+    markers = [];
+
+    allWeddingData.forEach(p => {
+        if (type === '전체' || p.type === type) {
+            const marker = new kakao.maps.Marker({
+                map: map,
+                position: new kakao.maps.LatLng(p.lat, p.lng)
+            });
+
+            kakao.maps.event.addListener(marker, 'click', () => openDetail(p));
+            markers.push(marker);
+        }
+    });
+}
+
+// 리스트 렌더링
 function renderList(type) {
-  const list = document.getElementById('list');
-  list.innerHTML = "";
+    const listDiv = document.getElementById('list');
+    listDiv.innerHTML = "";
 
-  weddingPlaces.forEach(p => {
-    if (type === '전체' || p.type === type) {
-      const div = document.createElement('div');
-      div.className = 'list-item';
-      div.innerHTML = `
-        <div class="list-thumb thumb-${p.type}">${p.icon}</div>
-        <div>
-          <b>${p.name}</b>
-          <div class="list-meta">${p.type} · ⭐ ${p.rating}</div>
-        </div>
-      `;
-      div.onclick = () => openDetail(p);
-      list.appendChild(div);
-    }
-  });
+    allWeddingData.forEach(p => {
+        if (type === '전체' || p.type === type) {
+            const div = document.createElement('div');
+            div.className = 'list-item';
+            div.innerHTML = `
+                <div class="list-thumb thumb-${p.type}">${p.icon}</div>
+                <div>
+                    <b>${p.name}</b>
+                    <div class="list-meta">${p.type} · ⭐ ${p.rating}</div>
+                </div>
+            `;
+            div.onclick = () => openDetail(p);
+            listDiv.appendChild(div);
+        }
+    });
 }
 
+// 상세 정보 열기
 function openDetail(p) {
-  map.setLevel(3);
-  map.panTo(new kakao.maps.LatLng(p.lat, p.lng));
+    map.panTo(new kakao.maps.LatLng(p.lat, p.lng));
+    map.setLevel(4);
 
-  const panel = document.getElementById('detailPanel');
-  panel.style.display = 'block';
-  panel.innerHTML = `
-    <h2>${p.name}</h2>
-    <span class="tag tag-${p.type}">${p.type}</span>
-    <p style="margin-top:10px">${p.desc}</p>
-    <p>⭐ ${p.rating}</p>
-    <button>상담 문의하기</button>
-  `;
+    const panel = document.getElementById('detailPanel');
+    panel.style.display = 'block';
+    panel.innerHTML = `
+        <h2>${p.name}</h2>
+        <span class="tag tag-${p.type}">${p.type}</span>
+        <p style="margin-top:10px; font-size:14px; color:#555;">📍 ${p.address}</p>
+        <p>⭐ ${p.rating}</p>
+        <button onclick="alert('문의 기능 준비 중입니다.')">상담 문의하기</button>
+    `;
 }
 
+// 필터 변경
 function filterMarkers(type) {
-  document.querySelectorAll('#filterBar button').forEach(b =>
-    b.classList.toggle('active', b.innerText === type)
-  );
-
-  Object.values(markers).forEach(m =>
-    (type === '전체' || m.category === type) ? m.setMap(map) : m.setMap(null)
-  );
-
-  document.getElementById('detailPanel').style.display = 'none';
-  renderList(type);
+    document.querySelectorAll('#filterBar button').forEach(b =>
+        b.classList.toggle('active', b.innerText === type)
+    );
+    displayMarkers(type);
+    renderList(type);
+    document.getElementById('detailPanel').style.display = 'none';
 }
 
+// 지역 검색
 function searchPlace() {
-  const keyword = document.getElementById('keyword').value;
-  if (!keyword) return;
-
-  ps.keywordSearch(keyword, (data, status) => {
-    if (status === kakao.maps.services.Status.OK) {
-      map.setCenter(new kakao.maps.LatLng(data[0].y, data[0].x));
-      map.setLevel(5);
-    }
-  });
+    const keyword = document.getElementById('keyword').value;
+    if (!keyword) return;
+    ps.keywordSearch(keyword, (data, status) => {
+        if (status === kakao.maps.services.Status.OK) {
+            map.setCenter(new kakao.maps.LatLng(data[0].y, data[0].x));
+            map.setLevel(7);
+        }
+    });
 }
-
-renderList('전체');
 </script>
 
 </body>
