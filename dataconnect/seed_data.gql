@@ -1,0 +1,48 @@
+mutation CreateDemoData @auth(level: PUBLIC, insecureReason: "This operation is used to seed data") @transaction {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      displayName: "demouser1",
+      email: "demouser1@example.com",
+      createdAt: "2024-04-02T12:00:00Z"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      displayName: "demouser2",
+      email: "demouser2@example.com",
+      createdAt: "2024-04-02T12:00:00Z"
+    }
+  ])
+  wedding_insertMany(data: [
+    {
+      id: "660e8400-e29b-41d4-a716-446655440000",
+      coupleId: "550e8400-e29b-41d4-a716-446655440000",
+      weddingName: "Demo Wedding 1",
+      weddingDate: "2025-06-15",
+      createdAt: "2024-04-02T12:00:00Z"
+    },
+    {
+      id: "660e8400-e29b-41d4-a716-446655440001",
+      coupleId: "550e8400-e29b-41d4-a716-446655440001",
+      weddingName: "Demo Wedding 2",
+      weddingDate: "2025-07-20",
+      createdAt: "2024-04-02T12:00:00Z"
+    }
+  ])
+  guest_insertMany(data: [
+    {
+      id: "770e8400-e29b-41d4-a716-446655440000",
+      weddingId: "660e8400-e29b-41d4-a716-446655440000",
+      firstName: "Guest",
+      lastName: "One",
+      email: "guest1@example.com"
+    },
+    {
+      id: "770e8400-e29b-41d4-a716-446655440001",
+      weddingId: "660e8400-e29b-41d4-a716-446655440001",
+      firstName: "Guest",
+      lastName: "Two",
+      email: "guest2@example.com"
+    }
+  ])
+}

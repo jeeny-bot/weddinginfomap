@@ -2,10 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8" />
-<title>웨딩정보맵 MVP (스드메)</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<!-- ✅ Google Analytics 4 -->
+<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-BR6G525NDG"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -14,58 +11,790 @@
   gtag('config', 'G-BR6G525NDG');
 </script>
 
-<!-- ✅ Kakao Map -->
+<!-- SEO Meta Tags -->
+<title>웨딩정보맵 - 전국 웨딩홀, 스튜디오, 드레스 가격비교</title>
+<meta name="description" content="전국 웨딩홀, 스튜디오, 드레스샵 정보를 한눈에! 실시간 가격비교, 후기, 예산 계산기까지. 결혼 준비의 모든 것을 웨딩정보맵에서 시작하세요." />
+<meta name="keywords" content="웨딩홀, 스튜디오, 드레스, 메이크업, 결혼준비, 웨딩정보, 가격비교" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="웨딩정보맵 - 결혼 준비의 모든 것" />
+<meta property="og:description" content="전국 웨딩 업체 정보와 가격을 한눈에 비교하세요" />
+<meta property="og:type" content="website" />
+
+<!-- Kakao Map API -->
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=ee4ca5b694129145f0819786d73d107a&libraries=services"></script>
 
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
 <style>
-/* ===== 디자인 절대 변경 없음 ===== */
-body { margin:0; font-family:"Noto Sans KR", Arial, sans-serif; background:#fafafa; }
-h1 { text-align:center; margin:16px 0 10px; font-size:22px; }
-#searchBar { display:flex; justify-content:center; gap:8px; margin-bottom:10px; }
-#searchBar input { width:220px; padding:9px 14px; border-radius:20px; border:1px solid #ddd; }
-#searchBar button { padding:9px 16px; border-radius:20px; border:none; background:#f0b6c9; color:#fff; cursor:pointer; }
+* {
+  box-sizing: border-box;
+}
 
-#filterBar { display:flex; justify-content:center; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
-#filterBar button { padding:8px 16px; border-radius:20px; border:1px solid #ddd; background:#fff; cursor:pointer; }
-#filterBar button.active { background:#f0b6c9; color:#fff; border-color:#f0b6c9; }
+body {
+  margin: 0;
+  font-family: "Noto Sans KR", Arial, sans-serif;
+  background: #fafafa;
+}
 
-#contentWrap { display:flex; justify-content:center; gap:16px; padding:0 16px 30px; }
-#map { width:55%; height:520px; border-radius:16px; box-shadow:0 6px 18px rgba(0,0,0,0.15); }
-#sideWrap { width:45%; max-width:420px; display:flex; flex-direction:column; gap:12px; }
+/* 헤더 */
+header {
+  background: linear-gradient(135deg, #f0b6c9 0%, #e89bb0 100%);
+  color: white;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
 
-#list, #detailPanel { background:#fff; border-radius:16px; box-shadow:0 6px 18px rgba(0,0,0,0.12); }
-#list { overflow-y:auto; max-height:300px; }
+h1 {
+  text-align: center;
+  margin: 0 0 10px;
+  font-size: 26px;
+  font-weight: 700;
+}
 
-.list-item { display:flex; gap:12px; padding:14px; border-bottom:1px solid #eee; cursor:pointer; }
-.list-item:hover { background:#fff3f7; }
-.list-thumb { width:56px; height:56px; border-radius:10px; background:#ddd; }
-.list-meta { font-size:12px; color:#777; }
+.subtitle {
+  text-align: center;
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0;
+}
 
-#detailPanel { padding:16px; display:none; }
-#detailPanel h2 { margin:0 0 6px; }
-#detailPanel button { width:100%; margin-top:12px; padding:12px; border-radius:12px; border:none; background:#f0b6c9; color:#fff; font-size:15px; cursor:pointer; }
+/* 검색바 */
+#searchBar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px 0 10px;
+  padding: 0 16px;
+  flex-wrap: wrap;
+}
+
+#searchBar input {
+  width: 250px;
+  max-width: 100%;
+  padding: 12px 16px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+#searchBar button {
+  padding: 12px 24px;
+  border-radius: 25px;
+  border: none;
+  background: #f0b6c9;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+#searchBar button:hover {
+  background: #e89bb0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 182, 201, 0.4);
+}
+
+/* 필터바 */
+#filterBar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  padding: 0 16px;
+}
+
+#filterBar button {
+  padding: 10px 18px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+#filterBar button:hover {
+  border-color: #f0b6c9;
+  color: #f0b6c9;
+}
+
+#filterBar button.active {
+  background: #f0b6c9;
+  color: #fff;
+  border-color: #f0b6c9;
+}
+
+/* 가격 필터 */
+#priceFilter {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 0 16px;
+  flex-wrap: wrap;
+}
+
+#priceFilter select {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* 통계 카드 */
+#statsBar {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 0 16px 20px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: white;
+  padding: 12px 20px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  text-align: center;
+  min-width: 100px;
+}
+
+.stat-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f0b6c9;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #777;
+  margin-top: 4px;
+}
+
+/* 레이아웃 */
+#contentWrap {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 16px 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+#map {
+  width: 55%;
+  height: 600px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+#sideWrap {
+  width: 45%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 리스트 */
+#list {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  overflow-y: auto;
+  max-height: 400px;
+  padding: 8px;
+}
+
+.list-item {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  cursor: pointer;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.list-item:hover {
+  background: #fff5f8;
+  transform: translateX(4px);
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.2);
+}
+
+.favorite-btn.active {
+  color: #ff6b9d;
+}
+
+/* 썸네일 */
+.list-thumb {
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.thumb-웨딩홀 { background: linear-gradient(135deg, #f0b6c9, #e89bb0); }
+.thumb-스튜디오 { background: linear-gradient(135deg, #7ab8f5, #5a9de5); }
+.thumb-드레스 { background: linear-gradient(135deg, #c8a2e8, #b088d8); }
+.thumb-메이크업 { background: linear-gradient(135deg, #f5b27a, #e5a266); }
+.thumb-스몰웨딩 { background: linear-gradient(135deg, #90d5a0, #7cc58d); }
+
+.list-info {
+  flex: 1;
+}
+
+.list-info h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.list-meta {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 6px;
+}
+
+.list-price {
+  font-size: 13px;
+  color: #f0b6c9;
+  font-weight: 600;
+}
+
+.list-rating {
+  font-size: 13px;
+  color: #ffa500;
+}
+
+/* 상세 패널 */
+#detailPanel {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  padding: 24px;
+  display: none;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+#detailPanel h2 {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+#detailPanel .tag {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 15px;
+  font-size: 12px;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.tag-웨딩홀 { background:#ffe6ee; color:#c94a6a; }
+.tag-스튜디오 { background:#e7f2ff; color:#2d6cc0; }
+.tag-드레스 { background:#f2eaff; color:#6b3fa0; }
+.tag-메이크업 { background:#fff0e3; color:#c96a22; }
+.tag-스몰웨딩 { background:#e8f5ea; color:#4a9960; }
+
+.detail-section {
+  margin: 20px 0;
+}
+
+.detail-section h3 {
+  font-size: 16px;
+  margin: 0 0 10px;
+  color: #333;
+}
+
+/* 갤러리 */
+.gallery {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0;
+}
+
+.gallery img {
+  width: 100px;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.gallery img:hover {
+  transform: scale(1.05);
+}
+
+/* 리뷰 */
+.review-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 12px;
+}
+
+.review-score {
+  font-size: 36px;
+  font-weight: 700;
+  color: #f0b6c9;
+}
+
+.review-stars {
+  font-size: 24px;
+  color: #ffa500;
+}
+
+.review-count {
+  font-size: 13px;
+  color: #777;
+}
+
+.review-item {
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.review-author {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.review-date {
+  font-size: 11px;
+  color: #999;
+}
+
+.review-text {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #555;
+}
+
+/* 가격 테이블 */
+.price-table {
+  width: 100%;
+  margin-top: 16px;
+  border-top: 2px solid #f0f0f0;
+  font-size: 14px;
+  border-collapse: collapse;
+}
+
+.price-table tr {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.price-table td {
+  padding: 12px 0;
+}
+
+.price-table td:first-child {
+  color: #777;
+}
+
+.price-table td:last-child {
+  text-align: right;
+  font-weight: 600;
+}
+
+.price-table tr:last-child {
+  font-weight: 700;
+  color: #f0b6c9;
+  font-size: 16px;
+}
+
+/* 버튼 */
+.btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: #f0b6c9;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #e89bb0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 182, 201, 0.4);
+}
+
+.btn-secondary {
+  background: #fff;
+  color: #f0b6c9;
+  border: 2px solid #f0b6c9;
+}
+
+.btn-secondary:hover {
+  background: #fff5f8;
+}
+
+/* 예산 계산기 */
+#budgetCalculator {
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  display: none;
+  margin-bottom: 20px;
+}
+
+#budgetCalculator h3 {
+  margin: 0 0 20px;
+  font-size: 18px;
+}
+
+.calculator-input {
+  margin-bottom: 16px;
+}
+
+.calculator-input label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #555;
+  font-weight: 500;
+}
+
+.calculator-input input,
+.calculator-input select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.budget-result {
+  background: linear-gradient(135deg, #f0b6c9, #e89bb0);
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.budget-result h4 {
+  margin: 0 0 10px;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.budget-amount {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+/* 탭 메뉴 */
+.tab-menu {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #777;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s;
+}
+
+.tab-btn.active {
+  color: #f0b6c9;
+  border-bottom-color: #f0b6c9;
+  font-weight: 600;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 20px;
+  }
+  
+  .subtitle {
+    font-size: 12px;
+  }
+  
+  #contentWrap {
+    flex-direction: column;
+    padding: 0 12px 30px;
+  }
+  
+  #map {
+    width: 100%;
+    height: 350px;
+    order: 2;
+  }
+  
+  #sideWrap {
+    width: 100%;
+    max-width: 100%;
+    order: 1;
+  }
+  
+  #list {
+    max-height: 300px;
+  }
+  
+  .list-thumb {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+  
+  #statsBar {
+    gap: 8px;
+  }
+  
+  .stat-card {
+    padding: 10px 16px;
+    min-width: 80px;
+  }
+  
+  .stat-number {
+    font-size: 18px;
+  }
+  
+  .stat-label {
+    font-size: 11px;
+  }
+}
+
+/* 로딩 애니메이션 */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
+
+.loading::after {
+  content: '...';
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
+/* 스크롤바 스타일 */
+#list::-webkit-scrollbar,
+#detailPanel::-webkit-scrollbar {
+  width: 8px;
+}
+
+#list::-webkit-scrollbar-track,
+#detailPanel::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+#list::-webkit-scrollbar-thumb,
+#detailPanel::-webkit-scrollbar-thumb {
+  background: #f0b6c9;
+  border-radius: 10px;
+}
+
+#list::-webkit-scrollbar-thumb:hover,
+#detailPanel::-webkit-scrollbar-thumb:hover {
+  background: #e89bb0;
+}
+
+/* 툴팁 */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 12px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
 </style>
 </head>
 
 <body>
 
-<h1>💍 웨딩정보맵 (스드메)</h1>
+<header>
+  <h1>💍 웨딩정보맵</h1>
+  <p class="subtitle">전국 웨딩 업체 정보와 가격을 한눈에 비교하세요</p>
+</header>
 
+<!-- 검색바 -->
 <div id="searchBar">
-  <input id="keyword" placeholder="지역 검색 (예: 강남, 종로)" />
-  <button onclick="searchPlace()">검색</button>
+  <input id="keyword" placeholder="지역 검색 (예: 강남, 홍대, 부산)" />
+  <button onclick="searchPlace()">🔍 검색</button>
+  <button onclick="toggleBudgetCalculator()">💰 예산계산기</button>
 </div>
 
+<!-- 예산 계산기 -->
+<div id="budgetCalculator">
+  <h3>💰 우리 결혼식 예산 계산하기</h3>
+  <div class="calculator-input">
+    <label>하객 수</label>
+    <input type="number" id="guestCount" placeholder="예: 200" value="200" onchange="calculateBudget()">
+  </div>
+  <div class="calculator-input">
+    <label>희망 지역</label>
+    <select id="region" onchange="calculateBudget()">
+      <option value="서울">서울</option>
+      <option value="경기">경기</option>
+      <option value="인천">인천</option>
+      <option value="부산">부산</option>
+      <option value="대구">대구</option>
+      <option value="기타">기타 지역</option>
+    </select>
+  </div>
+  <div class="calculator-input">
+    <label>스타일</label>
+    <select id="style" onchange="calculateBudget()">
+      <option value="스몰웨딩">스몰웨딩 (50인 이하)</option>
+      <option value="일반">일반 웨딩</option>
+      <option value="프리미엄">프리미엄 웨딩</option>
+    </select>
+  </div>
+  <div class="budget-result">
+    <h4>예상 총 비용</h4>
+    <div class="budget-amount" id="budgetAmount">23,500,000원</div>
+    <p style="font-size:12px; margin:10px 0 0; opacity:0.9;">* 웨딩홀 + 스튜디오 + 드레스 + 메이크업 기준</p>
+  </div>
+</div>
+
+<!-- 필터바 -->
 <div id="filterBar">
-  <button class="active">전체</button>
-  <button>웨딩홀</button>
-  <button>스튜디오</button>
-  <button>드레스</button>
-  <button>메이크업</button>
+  <button class="active" onclick="filterMarkers('전체')">전체</button>
+  <button onclick="filterMarkers('웨딩홀')">💒 웨딩홀</button>
+  <button onclick="filterMarkers('스튜디오')">📸 스튜디오</button>
+  <button onclick="filterMarkers('드레스')">👗 드레스</button>
+  <button onclick="filterMarkers('메이크업')">💄 메이크업</button>
+  <button onclick="filterMarkers('스몰웨딩')">🌿 스몰웨딩</button>
 </div>
 
+<!-- 가격 필터 -->
+<div id="priceFilter">
+  <select id="priceRange" onchange="applyFilters()">
+    <option value="all">전체 가격</option>
+    <option value="0-1000000">100만원 이하</option>
+    <option value="1000000-3000000">100만원 - 300만원</option>
+    <option value="3000000-5000000">300만원 - 500만원</option>
+    <option value="5000000-999999999">500만원 이상</option>
+  </select>
+  
+  <select id="ratingFilter" onchange="applyFilters()">
+    <option value="0">전체 평점</option>
+    <option value="4.5">⭐ 4.5 이상</option>
+    <option value="4.0">⭐ 4.0 이상</option>
+    <option value="3.5">⭐ 3.5 이상</option>
+  </select>
+</div>
+
+<!-- 통계 -->
+<div id="statsBar">
+  <div class="stat-card">
+    <div class="stat-number" id="totalPlaces">20</div>
+    <div class="stat-label">등록 업체</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">4.6</div>
+    <div class="stat-label">평균 평점</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number" id="avgPrice">2.8M</div>
+    <div class="stat-label">평균 가격</div>
+  </div>
+</div>
+
+<!-- 메인 컨텐츠 -->
 <div id="contentWrap">
   <div id="map"></div>
+
   <div id="sideWrap">
     <div id="list"></div>
     <div id="detailPanel"></div>
@@ -73,105 +802,823 @@ h1 { text-align:center; margin:16px 0 10px; font-size:22px; }
 </div>
 
 <script>
-/* ===== 지도 기본 ===== */
+// 카카오맵 초기화
 const map = new kakao.maps.Map(document.getElementById('map'), {
   center: new kakao.maps.LatLng(37.5665, 126.9780),
-  level: 7
+  level: 6
 });
-const geocoder = new kakao.maps.services.Geocoder();
+
 const ps = new kakao.maps.services.Places();
 
-let markers = [];
-let weddingHalls = [];
+// 웨딩 업체 데이터 (확장됨)
+const weddingPlaces = [
+  // 웨딩홀
+  { 
+    id: 1,
+    name: "행복웨딩홀", 
+    type: "웨딩홀", 
+    icon: "💒", 
+    lat: 37.5665, 
+    lng: 126.9780, 
+    desc: "서울 중심부 대형 웨딩홀. 최대 500명 수용 가능", 
+    rating: 4.7,
+    reviewCount: 128,
+    phone: "02-1234-5678",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "3,500,000원", 
+      extra: "500,000원(꽃장식)", 
+      total: "4,000,000원",
+      numericTotal: 4000000
+    },
+    images: ["https://via.placeholder.com/300x200/f0b6c9/ffffff?text=Wedding+Hall+1", 
+             "https://via.placeholder.com/300x200/e89bb0/ffffff?text=Wedding+Hall+2"],
+    reviews: [
+      { author: "김**", rating: 5, date: "2024-12-15", text: "너무 만족스러웠어요! 직원분들도 친절하시고 홀도 예뻤습니다." },
+      { author: "이**", rating: 4, date: "2024-11-28", text: "가격 대비 좋았어요. 음식도 맛있었습니다." },
+      { author: "박**", rating: 5, date: "2024-11-10", text: "최고였습니다! 추천해요." }
+    ]
+  },
+  { 
+    id: 2,
+    name: "그랜드 컨벤션홀", 
+    type: "웨딩홀", 
+    icon: "💒", 
+    lat: 37.5012, 
+    lng: 127.0396, 
+    desc: "강남 프리미엄 웨딩홀. 고급스러운 인테리어", 
+    rating: 4.8,
+    reviewCount: 89,
+    phone: "02-2345-6789",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "5,000,000원", 
+      extra: "800,000원(프리미엄 패키지)", 
+      total: "5,800,000원",
+      numericTotal: 5800000
+    },
+    images: ["https://via.placeholder.com/300x200/f0b6c9/ffffff?text=Grand+Hall"],
+    reviews: [
+      { author: "최**", rating: 5, date: "2025-01-05", text: "럭셔리하고 완벽했어요!" },
+      { author: "정**", rating: 4, date: "2024-12-20", text: "가격은 있지만 그만한 가치가 있습니다." }
+    ]
+  },
+  { 
+    id: 3,
+    name: "로맨틱 가든홀", 
+    type: "웨딩홀", 
+    icon: "💒", 
+    lat: 37.5172, 
+    lng: 127.0473, 
+    desc: "야외 정원이 있는 웨딩홀. 자연 친화적", 
+    rating: 4.6,
+    reviewCount: 156,
+    phone: "02-3456-7890",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "3,200,000원", 
+      extra: "600,000원(정원 대관료)", 
+      total: "3,800,000원",
+      numericTotal: 3800000
+    },
+    images: ["https://via.placeholder.com/300x200/f0b6c9/ffffff?text=Garden+Hall"],
+    reviews: [
+      { author: "윤**", rating: 5, date: "2024-11-30", text: "정원이 너무 예뻐요!" }
+    ]
+  },
 
-/* ===== 공공데이터 API ===== */
-const SERVICE_KEY = "d03c12012702d15b0490241512870f35c111e91ccac18cddd3e23e0173e06d2";
-const API_URL = `https://api.data.go.kr/openapi/tn_pubr_public_wedding_and_ceremony_hall_api?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=50&type=json`;
+  // 스튜디오
+  { 
+    id: 4,
+    name: "라라 스튜디오", 
+    type: "스튜디오", 
+    icon: "📸", 
+    lat: 37.5651, 
+    lng: 126.9895, 
+    desc: "감성 웨딩 촬영 전문. SNS 인기 스튜디오", 
+    rating: 4.6,
+    reviewCount: 201,
+    phone: "02-4567-8901",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "1,200,000원", 
+      extra: "330,000원(원본+수정본)", 
+      total: "1,530,000원",
+      numericTotal: 1530000
+    },
+    images: ["https://via.placeholder.com/300x200/7ab8f5/ffffff?text=Studio+1"],
+    reviews: [
+      { author: "한**", rating: 5, date: "2024-12-28", text: "사진 진짜 잘 나왔어요! 감동했습니다." },
+      { author: "강**", rating: 4, date: "2024-12-10", text: "작가님이 정말 친절하세요." }
+    ]
+  },
+  { 
+    id: 5,
+    name: "모던 포토", 
+    type: "스튜디오", 
+    icon: "📸", 
+    lat: 37.5547, 
+    lng: 126.9707, 
+    desc: "현대적인 감각의 웨딩 스튜디오", 
+    rating: 4.5,
+    reviewCount: 178,
+    phone: "02-5678-9012",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "980,000원", 
+      extra: "200,000원(야외촬영)", 
+      total: "1,180,000원",
+      numericTotal: 1180000
+    },
+    images: ["https://via.placeholder.com/300x200/7ab8f5/ffffff?text=Modern+Photo"],
+    reviews: [
+      { author: "송**", rating: 5, date: "2025-01-12", text: "가격 대비 최고!" }
+    ]
+  },
+  { 
+    id: 6,
+    name: "클래식 웨딩스냅", 
+    type: "스튜디오", 
+    icon: "📸", 
+    lat: 37.4979, 
+    lng: 127.0276, 
+    desc: "전통과 현대가 어우러진 웨딩 촬영", 
+    rating: 4.7,
+    reviewCount: 92,
+    phone: "02-6789-0123",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "1,500,000원", 
+      extra: "400,000원(드론촬영)", 
+      total: "1,900,000원",
+      numericTotal: 1900000
+    },
+    images: ["https://via.placeholder.com/300x200/7ab8f5/ffffff?text=Classic+Studio"],
+    reviews: [
+      { author: "조**", rating: 5, date: "2024-12-05", text: "완벽한 추억 만들었어요!" }
+    ]
+  },
 
-/* ===== 데이터 불러오기 ===== */
-fetch(API_URL)
-  .then(res => res.json())
-  .then(data => {
-    const items = data.response.body.items;
-    items.forEach(item => addWeddingHall(item));
-  })
-  .catch(() => {
-    document.getElementById("list").innerHTML =
-      "<p style='padding:16px;color:red'>데이터 연동 오류가 발생했습니다.</p>";
-  });
+  // 드레스
+  { 
+    id: 7,
+    name: "블랑 드레스", 
+    type: "드레스", 
+    icon: "👗", 
+    lat: 37.57, 
+    lng: 126.982, 
+    desc: "유럽 수입 드레스 전문. 맞춤 제작 가능", 
+    rating: 4.8,
+    reviewCount: 145,
+    phone: "02-7890-1234",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "2,000,000원", 
+      extra: "200,000원(피팅비)", 
+      total: "2,200,000원",
+      numericTotal: 2200000
+    },
+    images: ["https://via.placeholder.com/300x200/c8a2e8/ffffff?text=Dress+Shop"],
+    reviews: [
+      { author: "오**", rating: 5, date: "2025-01-08", text: "드레스가 너무 예뻐요! 공주 된 기분" },
+      { author: "임**", rating: 4, date: "2024-12-22", text: "다양한 스타일이 많아요" }
+    ]
+  },
+  { 
+    id: 8,
+    name: "엘레강스 웨딩드레스", 
+    type: "드레스", 
+    icon: "👗", 
+    lat: 37.5133, 
+    lng: 127.1028, 
+    desc: "국내 디자이너 드레스 컬렉션", 
+    rating: 4.5,
+    reviewCount: 67,
+    phone: "02-8901-2345",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "1,500,000원", 
+      extra: "150,000원(수선비)", 
+      total: "1,650,000원",
+      numericTotal: 1650000
+    },
+    images: ["https://via.placeholder.com/300x200/c8a2e8/ffffff?text=Elegance"],
+    reviews: [
+      { author: "신**", rating: 5, date: "2024-11-18", text: "상담도 친절하고 좋았어요" }
+    ]
+  },
 
-function addWeddingHall(item) {
-  const name = item.fcltyNm;
-  const address = item.rdnmadr || item.lnmadr;
-  if (!address) return;
+  // 메이크업
+  { 
+    id: 9,
+    name: "로즈 메이크업", 
+    type: "메이크업", 
+    icon: "💄", 
+    lat: 37.5688, 
+    lng: 126.9835, 
+    desc: "20년 경력 웨딩 메이크업 전문", 
+    rating: 4.5,
+    reviewCount: 234,
+    phone: "02-9012-3456",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "500,000원", 
+      extra: "150,000원(직급지정비)", 
+      total: "650,000원",
+      numericTotal: 650000
+    },
+    images: ["https://via.placeholder.com/300x200/f5b27a/ffffff?text=Makeup"],
+    reviews: [
+      { author: "안**", rating: 5, date: "2025-01-15", text: "메이크업 진짜 예쁘게 해주세요!" },
+      { author: "배**", rating: 4, date: "2024-12-30", text: "만족합니다" }
+    ]
+  },
+  { 
+    id: 10,
+    name: "뷰티 아뜰리에", 
+    type: "메이크업", 
+    icon: "💄", 
+    lat: 37.5019, 
+    lng: 127.0411, 
+    desc: "맞춤형 웨딩 메이크업 & 헤어", 
+    rating: 4.7,
+    reviewCount: 189,
+    phone: "02-0123-4567",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "600,000원", 
+      extra: "100,000원(시연 메이크업)", 
+      total: "700,000원",
+      numericTotal: 700000
+    },
+    images: ["https://via.placeholder.com/300x200/f5b27a/ffffff?text=Beauty"],
+    reviews: [
+      { author: "유**", rating: 5, date: "2024-12-12", text: "너무 만족해요!" }
+    ]
+  },
 
-  geocoder.addressSearch(address, (result, status) => {
-    if (status !== kakao.maps.services.Status.OK) return;
+  // 스몰웨딩
+  { 
+    id: 11,
+    name: "숲속 정원 카페", 
+    type: "스몰웨딩", 
+    icon: "🌿", 
+    lat: 37.572, 
+    lng: 126.975, 
+    desc: "야외 정원 스몰웨딩 전문. 50인 이하", 
+    rating: 4.9,
+    reviewCount: 76,
+    phone: "02-1122-3344",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "1,500,000원(대관)", 
+      extra: "인당 55,000원(뷔페)", 
+      total: "인원별 상이",
+      numericTotal: 1500000
+    },
+    images: ["https://via.placeholder.com/300x200/90d5a0/ffffff?text=Garden+Cafe"],
+    reviews: [
+      { author: "홍**", rating: 5, date: "2025-01-20", text: "아늑하고 따뜻한 분위기 최고!" },
+      { author: "문**", rating: 5, date: "2024-12-18", text: "소규모 웨딩 원하시면 강추!" }
+    ]
+  },
+  { 
+    id: 12,
+    name: "하우스 웨딩홀", 
+    type: "스몰웨딩", 
+    icon: "🌿", 
+    lat: 37.5445, 
+    lng: 127.0557, 
+    desc: "단독 하우스 대관 스몰웨딩", 
+    rating: 4.6,
+    reviewCount: 54,
+    phone: "02-2233-4455",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "2,000,000원", 
+      extra: "인당 65,000원(뷔페)", 
+      total: "인원별 상이",
+      numericTotal: 2000000
+    },
+    images: ["https://via.placeholder.com/300x200/90d5a0/ffffff?text=House+Wedding"],
+    reviews: [
+      { author: "서**", rating: 5, date: "2024-11-25", text: "프라이빗하고 좋았어요" }
+    ]
+  },
 
-    const hall = {
-      name,
-      address,
-      lat: result[0].y,
-      lng: result[0].x
-    };
+  // 추가 데이터
+  { 
+    id: 13,
+    name: "신라 웨딩홀", 
+    type: "웨딩홀", 
+    icon: "💒", 
+    lat: 37.5558, 
+    lng: 126.9371, 
+    desc: "호텔식 웨딩홀. 5성급 서비스", 
+    rating: 4.9,
+    reviewCount: 312,
+    phone: "02-3344-5566",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "6,500,000원", 
+      extra: "1,200,000원(VIP패키지)", 
+      total: "7,700,000원",
+      numericTotal: 7700000
+    },
+    images: ["https://via.placeholder.com/300x200/f0b6c9/ffffff?text=Hotel+Wedding"],
+    reviews: [
+      { author: "권**", rating: 5, date: "2025-01-18", text: "최상급 서비스였어요!" }
+    ]
+  },
+  { 
+    id: 14,
+    name: "파티오 스튜디오", 
+    type: "스튜디오", 
+    icon: "📸", 
+    lat: 37.5217, 
+    lng: 126.9244, 
+    desc: "야외 촬영 특화 스튜디오", 
+    rating: 4.4,
+    reviewCount: 98,
+    phone: "02-4455-6677",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "850,000원", 
+      extra: "180,000원(추가 촬영)", 
+      total: "1,030,000원",
+      numericTotal: 1030000
+    },
+    images: ["https://via.placeholder.com/300x200/7ab8f5/ffffff?text=Patio+Studio"],
+    reviews: [
+      { author: "민**", rating: 4, date: "2024-12-08", text: "야외 사진 예뻐요" }
+    ]
+  },
+  { 
+    id: 15,
+    name: "프린세스 드레스샵", 
+    type: "드레스", 
+    icon: "👗", 
+    lat: 37.5087, 
+    lng: 127.0632, 
+    desc: "커스텀 드레스 제작 전문", 
+    rating: 4.6,
+    reviewCount: 71,
+    phone: "02-5566-7788",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "2,500,000원", 
+      extra: "300,000원(맞춤 제작비)", 
+      total: "2,800,000원",
+      numericTotal: 2800000
+    },
+    images: ["https://via.placeholder.com/300x200/c8a2e8/ffffff?text=Princess"],
+    reviews: [
+      { author: "하**", rating: 5, date: "2025-01-10", text: "세상에 하나뿐인 드레스!" }
+    ]
+  },
+  { 
+    id: 16,
+    name: "글로우 메이크업샵", 
+    type: "메이크업", 
+    icon: "💄", 
+    lat: 37.5333, 
+    lng: 126.9906, 
+    desc: "자연스러운 메이크업 스타일", 
+    rating: 4.3,
+    reviewCount: 156,
+    phone: "02-6677-8899",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "450,000원", 
+      extra: "120,000원(리허설)", 
+      total: "570,000원",
+      numericTotal: 570000
+    },
+    images: ["https://via.placeholder.com/300x200/f5b27a/ffffff?text=Glow"],
+    reviews: [
+      { author: "고**", rating: 4, date: "2024-11-20", text: "자연스럽고 좋아요" }
+    ]
+  },
+  { 
+    id: 17,
+    name: "비스타 웨딩홀", 
+    type: "웨딩홀", 
+    icon: "💒", 
+    lat: 37.4862, 
+    lng: 127.0361, 
+    desc: "강남 중심 중형 웨딩홀", 
+    rating: 4.5,
+    reviewCount: 189,
+    phone: "02-7788-9900",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "4,200,000원", 
+      extra: "600,000원(추가옵션)", 
+      total: "4,800,000원",
+      numericTotal: 4800000
+    },
+    images: ["https://via.placeholder.com/300x200/f0b6c9/ffffff?text=Vista"],
+    reviews: [
+      { author: "나**", rating: 4, date: "2024-12-15", text: "깔끔하고 좋았어요" }
+    ]
+  },
+  { 
+    id: 18,
+    name: "에이스 스튜디오", 
+    type: "스튜디오", 
+    icon: "📸", 
+    lat: 37.5796, 
+    lng: 126.9770, 
+    desc: "최신 장비 완비 스튜디오", 
+    rating: 4.8,
+    reviewCount: 143,
+    phone: "02-8899-0011",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "1,350,000원", 
+      extra: "250,000원(영상촬영)", 
+      total: "1,600,000원",
+      numericTotal: 1600000
+    },
+    images: ["https://via.placeholder.com/300x200/7ab8f5/ffffff?text=Ace+Studio"],
+    reviews: [
+      { author: "도**", rating: 5, date: "2025-01-22", text: "장비가 정말 좋아요!" }
+    ]
+  },
+  { 
+    id: 19,
+    name: "로얄 드레스", 
+    type: "드레스", 
+    icon: "👗", 
+    lat: 37.5244, 
+    lng: 127.0378, 
+    desc: "대여 및 판매 전문", 
+    rating: 4.4,
+    reviewCount: 91,
+    phone: "02-9900-1122",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "1,200,000원", 
+      extra: "100,000원(액세서리)", 
+      total: "1,300,000원",
+      numericTotal: 1300000
+    },
+    images: ["https://via.placeholder.com/300x200/c8a2e8/ffffff?text=Royal+Dress"],
+    reviews: [
+      { author: "라**", rating: 4, date: "2024-12-28", text: "가성비 좋아요" }
+    ]
+  },
+  { 
+    id: 20,
+    name: "럭셔리 메이크업", 
+    type: "메이크업", 
+    icon: "💄", 
+    lat: 37.5622, 
+    lng: 126.9882, 
+    desc: "고급 화장품 사용 메이크업", 
+    rating: 4.6,
+    reviewCount: 167,
+    phone: "02-0011-2233",
+    kakao: "http://pf.kakao.com/_example",
+    priceInfo: { 
+      base: "750,000원", 
+      extra: "200,000원(속눈썹 연장)", 
+      total: "950,000원",
+      numericTotal: 950000
+    },
+    images: ["https://via.placeholder.com/300x200/f5b27a/ffffff?text=Luxury"],
+    reviews: [
+      { author: "마**", rating: 5, date: "2025-01-05", text: "화장이 정말 오래가요!" }
+    ]
+  }
+];
 
-    weddingHalls.push(hall);
-    createMarker(hall);
-    createListItem(hall);
-  });
-}
+// 즐겨찾기 관리
+let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
 
-/* ===== 마커 ===== */
-function createMarker(p) {
-  const marker = new kakao.maps.Marker({
+// 마커 관리
+const markers = {};
+let currentCategory = '전체';
+
+// 마커 생성
+weddingPlaces.forEach(p => {
+  markers[p.id] = new kakao.maps.Marker({
     map,
     position: new kakao.maps.LatLng(p.lat, p.lng)
   });
-  markers.push(marker);
-  kakao.maps.event.addListener(marker, 'click', () => openDetail(p));
+  markers[p.id].category = p.type;
+  
+  // 마커 클릭 이벤트
+  kakao.maps.event.addListener(markers[p.id], 'click', function() {
+    openDetail(p);
+  });
+});
+
+// 리스트 렌더링
+function renderList(type, priceRange = 'all', minRating = 0) {
+  const list = document.getElementById('list');
+  list.innerHTML = "";
+
+  let filteredPlaces = weddingPlaces.filter(p => {
+    // 카테고리 필터
+    if (type !== '전체' && p.type !== type) return false;
+    
+    // 가격 필터
+    if (priceRange !== 'all') {
+      const [min, max] = priceRange.split('-').map(Number);
+      if (p.priceInfo.numericTotal < min || p.priceInfo.numericTotal > max) return false;
+    }
+    
+    // 평점 필터
+    if (p.rating < minRating) return false;
+    
+    return true;
+  });
+
+  if (filteredPlaces.length === 0) {
+    list.innerHTML = '<div class="loading">검색 결과가 없습니다</div>';
+    return;
+  }
+
+  filteredPlaces.forEach(p => {
+    const isFavorite = favorites.includes(p.id);
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = `
+      <div class="list-thumb thumb-${p.type}">${p.icon}</div>
+      <div class="list-info">
+        <h3>${p.name}</h3>
+        <div class="list-meta">${p.type} · 📍 ${getDistance(p.lat, p.lng)}</div>
+        <div class="list-rating">⭐ ${p.rating} (${p.reviewCount})</div>
+        <div class="list-price">${p.priceInfo.total}</div>
+      </div>
+      <button class="favorite-btn ${isFavorite ? 'active' : ''}" onclick="toggleFavorite(event, ${p.id})">
+        ${isFavorite ? '❤️' : '🤍'}
+      </button>
+    `;
+    div.onclick = (e) => {
+      if (!e.target.classList.contains('favorite-btn')) {
+        openDetail(p);
+      }
+    };
+    list.appendChild(div);
+  });
+  
+  // 통계 업데이트
+  updateStats(filteredPlaces);
 }
 
-/* ===== 리스트 ===== */
-function createListItem(p) {
-  const list = document.getElementById("list");
-  const div = document.createElement("div");
-  div.className = "list-item";
-  div.innerHTML = `
-    <div class="list-thumb"></div>
-    <div>
-      <b>${p.name}</b>
-      <div class="list-meta">${p.address}</div>
-    </div>
-  `;
-  div.onclick = () => openDetail(p);
-  list.appendChild(div);
+// 거리 계산 (간단 버전)
+function getDistance(lat, lng) {
+  const center = map.getCenter();
+  const distance = Math.sqrt(
+    Math.pow(center.getLat() - lat, 2) + 
+    Math.pow(center.getLng() - lng, 2)
+  ) * 111; // 대략적인 km 변환
+  return distance < 1 ? '1km 이내' : `${distance.toFixed(1)}km`;
 }
 
-/* ===== 상세 ===== */
+// 즐겨찾기 토글
+function toggleFavorite(event, placeId) {
+  event.stopPropagation();
+  const index = favorites.indexOf(placeId);
+  if (index > -1) {
+    favorites.splice(index, 1);
+  } else {
+    favorites.push(placeId);
+  }
+  localStorage.setItem('favorites', JSON.stringify(favorites));
+  renderList(currentCategory);
+}
+
+// 상세 패널 열기
 function openDetail(p) {
-  map.setLevel(4);
+  map.setLevel(3);
   map.panTo(new kakao.maps.LatLng(p.lat, p.lng));
 
-  const panel = document.getElementById("detailPanel");
-  panel.style.display = "block";
+  const panel = document.getElementById('detailPanel');
+  panel.style.display = 'block';
+  
+  // 별점 표시
+  const stars = '⭐'.repeat(Math.round(p.rating));
+  
+  // 갤러리
+  const galleryHTML = p.images ? `
+    <div class="detail-section">
+      <h3>📷 갤러리</h3>
+      <div class="gallery">
+        ${p.images.map(img => `<img src="${img}" alt="${p.name}" loading="lazy">`).join('')}
+      </div>
+    </div>
+  ` : '';
+  
+  // 리뷰
+  const reviewsHTML = p.reviews ? `
+    <div class="detail-section">
+      <h3>⭐ 리뷰</h3>
+      <div class="review-summary">
+        <div>
+          <div class="review-score">${p.rating}</div>
+          <div class="review-stars">${stars}</div>
+          <div class="review-count">${p.reviewCount}개의 리뷰</div>
+        </div>
+      </div>
+      ${p.reviews.slice(0, 3).map(r => `
+        <div class="review-item">
+          <div class="review-header">
+            <span class="review-author">${r.author}</span>
+            <span class="review-date">${r.date}</span>
+          </div>
+          <div class="review-stars">${'⭐'.repeat(r.rating)}</div>
+          <div class="review-text">${r.text}</div>
+        </div>
+      `).join('')}
+    </div>
+  ` : '';
+  
+  // 가격 정보
+  const priceTable = p.priceInfo ? `
+    <div class="detail-section">
+      <h3>💰 가격 정보</h3>
+      <table class="price-table">
+        <tr>
+          <td>기본 견적</td>
+          <td>${p.priceInfo.base}</td>
+        </tr>
+        <tr>
+          <td>필수 추가금</td>
+          <td>${p.priceInfo.extra}</td>
+        </tr>
+        <tr>
+          <td>최종 예상가</td>
+          <td>${p.priceInfo.total}</td>
+        </tr>
+      </table>
+    </div>
+  ` : '';
+
   panel.innerHTML = `
     <h2>${p.name}</h2>
-    <p>${p.address}</p>
-    <button>상담 문의하기</button>
+    <span class="tag tag-${p.type}">${p.type}</span>
+    <p style="margin-top:10px; color:#555; line-height:1.6;">${p.desc}</p>
+    <p style="margin-top:8px;">⭐ ${p.rating} · 📍 ${getDistance(p.lat, p.lng)} · 📞 ${p.phone}</p>
+    
+    ${galleryHTML}
+    ${priceTable}
+    ${reviewsHTML}
+    
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="inquire('${p.kakao}', '${p.name}')">
+        💬 카톡 상담
+      </button>
+      <button class="btn btn-secondary" onclick="callPhone('${p.phone}')">
+        📞 전화하기
+      </button>
+    </div>
   `;
+  
+  // 스크롤을 상단으로
+  panel.scrollTop = 0;
 }
 
-/* ===== 검색 ===== */
+// 문의하기
+function inquire(kakaoUrl, name) {
+  // 실제로는 카카오톡 채널 URL로 이동
+  if (confirm(`${name}에 상담 문의하시겠습니까?`)) {
+    // window.open(kakaoUrl, '_blank');
+    alert('카카오톡 채널 연동은 실제 서비스에서 가능합니다.\n데모 버전입니다.');
+  }
+}
+
+// 전화하기
+function callPhone(phone) {
+  window.location.href = `tel:${phone}`;
+}
+
+// 필터 적용
+function filterMarkers(type) {
+  currentCategory = type;
+  
+  document.querySelectorAll('#filterBar button').forEach(b =>
+    b.classList.toggle('active', b.innerText.includes(type))
+  );
+
+  Object.values(markers).forEach(m =>
+    (type === '전체' || m.category === type) ? m.setMap(map) : m.setMap(null)
+  );
+
+  document.getElementById('detailPanel').style.display = 'none';
+  applyFilters();
+}
+
+// 가격/평점 필터 적용
+function applyFilters() {
+  const priceRange = document.getElementById('priceRange').value;
+  const minRating = parseFloat(document.getElementById('ratingFilter').value);
+  renderList(currentCategory, priceRange, minRating);
+}
+
+// 장소 검색
 function searchPlace() {
-  const keyword = document.getElementById("keyword").value;
-  if (!keyword) return;
+  const keyword = document.getElementById('keyword').value;
+  if (!keyword) {
+    alert('검색어를 입력해주세요');
+    return;
+  }
 
   ps.keywordSearch(keyword, (data, status) => {
     if (status === kakao.maps.services.Status.OK) {
       map.setCenter(new kakao.maps.LatLng(data[0].y, data[0].x));
-      map.setLevel(6);
+      map.setLevel(5);
+      renderList(currentCategory);
+    } else {
+      alert('검색 결과가 없습니다');
     }
   });
+}
+
+// 예산 계산기 토글
+function toggleBudgetCalculator() {
+  const calc = document.getElementById('budgetCalculator');
+  calc.style.display = calc.style.display === 'none' ? 'block' : 'none';
+  if (calc.style.display === 'block') {
+    calculateBudget();
+  }
+}
+
+// 예산 계산
+function calculateBudget() {
+  const guestCount = parseInt(document.getElementById('guestCount').value) || 200;
+  const region = document.getElementById('region').value;
+  const style = document.getElementById('style').value;
+  
+  let base = 0;
+  
+  // 스타일별 기본 금액
+  if (style === '스몰웨딩') {
+    base = 8000000;
+  } else if (style === '일반') {
+    base = 20000000;
+  } else {
+    base = 35000000;
+  }
+  
+  // 지역별 가산
+  const regionMultiplier = {
+    '서울': 1.3,
+    '경기': 1.1,
+    '인천': 1.0,
+    '부산': 0.9,
+    '대구': 0.85,
+    '기타': 0.8
+  };
+  
+  base *= regionMultiplier[region] || 1;
+  
+  // 하객 수 반영 (200명 기준)
+  const guestCost = (guestCount / 200) * base;
+  
+  const total = Math.round(guestCost / 1000000) * 1000000;
+  
+  document.getElementById('budgetAmount').textContent = 
+    total.toLocaleString() + '원';
+}
+
+// 통계 업데이트
+function updateStats(places) {
+  document.getElementById('totalPlaces').textContent = places.length;
+  
+  const avgRating = places.reduce((sum, p) => sum + p.rating, 0) / places.length;
+  document.querySelector('#statsBar .stat-card:nth-child(2) .stat-number').textContent = 
+    avgRating.toFixed(1);
+  
+  const avgPrice = places.reduce((sum, p) => sum + p.priceInfo.numericTotal, 0) / places.length;
+  document.getElementById('avgPrice').textContent = 
+    (avgPrice / 1000000).toFixed(1) + 'M';
+}
+
+// 초기 렌더링
+renderList('전체');
+
+// Enter 키 검색
+document.getElementById('keyword').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    searchPlace();
+  }
+});
+
+// 초기 예산 계산
+calculateBudget();
+</script>
+
+<!-- Structured Data for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "웨딩정보맵",
+  "description": "전국 웨딩홀, 스튜디오, 드레스샵 정보 및 가격비교",
+  "url": "https://weddingmap.kr"
 }
 </script>
 

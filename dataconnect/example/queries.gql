@@ -1,0 +1,25 @@
+mutation CreateNewWedding($weddingName: String!, $weddingDate: Date!) @auth(level: USER) {
+  wedding_insert(data: {weddingName: $weddingName, weddingDate: $weddingDate, coupleId_expr: "auth.uid"})
+}
+
+query GetMyWeddings @auth(level: USER) {
+  weddings(where: {coupleId_expr: "auth.uid"}) {
+    id
+    weddingName
+    weddingDate
+  }
+}
+
+mutation AddGuestToWedding($weddingId: UUID!, $firstName: String!, $lastName: String!, $email: String!) @auth(level: USER) {
+  guest_insert(data: {weddingId: $weddingId, firstName: $firstName, lastName: $lastName, email: $email})
+}
+
+query ListGuestsForWedding($weddingId: UUID!) @auth(level: USER) {
+  guests(where: {weddingId: {eq: $weddingId}}) {
+    id
+    firstName
+    lastName
+    email
+    rsvpStatus
+  }
+}

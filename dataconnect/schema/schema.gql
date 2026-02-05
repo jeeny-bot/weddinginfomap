@@ -1,0 +1,51 @@
+type User @table {
+  email: String!
+  displayName: String!
+  createdAt: Timestamp!
+  photoUrl: String
+}
+
+type Wedding @table {
+  weddingName: String!
+  weddingDate: Date!
+  createdAt: Timestamp!
+  websiteUrl: String
+  description: String
+  venueName: String
+  venueAddress: String
+  registryLink: String
+  couple: User
+}
+
+type Guest @table {
+  firstName: String!
+  lastName: String!
+  rsvpStatus: String
+  mealChoice: String
+  notes: String
+  email: String
+  wedding: Wedding!
+  user: User
+}
+
+type Vendor @table {
+  name: String!
+  serviceType: String!
+  contactPerson: String!
+  createdAt: Timestamp!
+  email: String
+  phone: String
+  website: String
+  notes: String
+  wedding: Wedding
+}
+
+type RegistryItem @table {
+  name: String!
+  createdAt: Timestamp!
+  description: String
+  price: Float
+  link: String
+  wedding: Wedding
+  purchasedByGuest: Guest
+}
